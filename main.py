@@ -52,6 +52,8 @@ def main():
     parser = argparse.ArgumentParser(description='Solve knapsack problem with time limit')
     parser.add_argument('--time_limit', type=int, help='Time limit in seconds')
     parser.add_argument('--output_dir', type=str, help='Directory path for output')
+    parser.add_argument('--idx_begin', type=int, default=0, help='begin')
+    
     args = parser.parse_args()
     time_limit = args.time_limit
 
@@ -64,9 +66,9 @@ def main():
         os.makedirs(output_dir)
 
     kplib_list = sorted(os.listdir(dir_path))[1:14] # 0->12
-
+    test_cases, i_s, cases, rs = [], [], [], []
     for i in kplib_list:
-        print(i)
+        # print(i)
         dir_path_0 = os.path.join(dir_path, i)
         case_list = sorted(os.listdir(dir_path_0))# n00050->n10000
         # print(case_list)
@@ -76,27 +78,37 @@ def main():
             for r in R_list:
                 kp_filename = 's012'
                 s_path = os.path.join(case_path, r, f'{kp_filename}.kp')            
-                print(s_path)
-                capacities, values, weights = read_file(s_path)
+                # print(s_path)
 
-                computed_value, total_weight, packed_items, packed_weights, time_excution = knapsack(capacities, values, weights, time_limit)
-
-                output_file_name = f'{i}_{case}_{r}_{kp_filename}.txt'
-                output_path = os.path.join(output_dir, output_file_name)
-
-                # kiểm tra tính optimal: 
-                # giả sử: nếu thời gian thực thi nhỏ hơn time_limit thì lời giải optimal
-                optimal = time_excution < time_limit
+                test_cases.append(s_path)
+                i_s.append(i)
+                cases.append(case)
+                rs.append(r)
                 
-                with open(output_path, "w") as f:
-                    f.write('Test case name: ' + str(output_file_name.split(sep='.')[0]) + '\n')
-                    f.write('time knapsack caculate: '+str(time_excution)+'\n')
-                    f.write('Total value = '+ str(computed_value)+'\n')
-                    f.write('Total weight: '+ str(total_weight)+'\n')
-                    f.write('Packed items: '+ str(packed_items)+'\n')
-                    f.write('packed_weights: '+str (packed_weights))
-                with open(os.path.join(base_output, f'output_{time_limit}.txt'), 'a') as file:
-                    file.write(f'{i}, {case}/{r}/{kp_filename}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
+    idx_begin = args.idx_begin
+    for idx in range(idx_begin, len(test_cases)):   
+        print(test_cases[idx])         
+        capacities, values, weights = read_file(test_cases[idx])
+
+        computed_value, total_weight, packed_items, packed_weights, time_excution = knapsack(capacities, values, weights, time_limit)
+
+        output_file_name = f'{i_s[idx]}_{cases[idx]}_{rs[idx]}_{kp_filename}.txt'
+        output_path = os.path.join(output_dir, output_file_name)
+
+        # kiểm tra tính optimal: 
+        # giả sử: nếu thời gian thực thi nhỏ hơn time_limit thì lời giải optimal
+        optimal = time_excution < time_limit
+        
+        with open(output_path, "w") as f:
+            f.write('Test case name: ' + str(output_file_name.split(sep='.')[0]) + '\n')
+            f.write('time knapsack caculate: '+str(time_excution)+'\n')
+            f.write('Total value = '+ str(computed_value)+'\n')
+            f.write('Total weight: '+ str(total_weight)+'\n')
+            f.write('Packed items: '+ str(packed_items)+'\n')
+            f.write('packed_weights: '+str (packed_weights))
+        with open(os.path.join(base_output, f'output_{time_limit}.txt'), 'a') as file:
+            file.write(f'{idx}, {i_s[idx]}/{cases[idx]}/{rs[idx]}/{kp_filename}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
 
 if __name__ == "__main__":
     main()
+#python main.py --time_limit 60 --output_dir ./output --idx_begin 8
