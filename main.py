@@ -87,14 +87,14 @@ def main():
                 optimal = time_excution < time_limit
                 
                 with open(output_path, "w") as f:
-                    f.write('Test case name: ' + output_file_name + '\n')
+                    f.write('Test case name: ' + str(output_file_name.split(sep='.')[0]) + '\n')
                     f.write('time knapsack caculate: '+str(time_excution)+'\n')
                     f.write('Total value = '+ str(computed_value)+'\n')
                     f.write('Total weight: '+ str(total_weight)+'\n')
                     f.write('Packed items: '+ str(packed_items)+'\n')
                     f.write('packed_weights: '+str (packed_weights))
                 with open(os.path.join(os.getcwd(), f'output_{time_limit}.txt'), 'a') as file:
-                    file.write(f'{output_file_name}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
+                    file.write(f'{output_file_name.split(sep=".")[0]}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
 
 if __name__ == "__main__":
     main()
