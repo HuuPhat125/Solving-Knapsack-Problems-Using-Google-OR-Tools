@@ -50,27 +50,29 @@ def knapsack(capacities, values, weights, time_limit):
 def main():
 
     parser = argparse.ArgumentParser(description='Solve knapsack problem with time limit')
-    parser.add_argument('time_limit', type=int, help='Time limit in seconds')
+    parser.add_argument('--time_limit', type=int, help='Time limit in seconds')
+    parser.add_argument('--output_dir', type=str, help='Directory path for output')
     args = parser.parse_args()
     time_limit = args.time_limit
 
     dir_path = os.getcwd()
     dir_path = os.path.join(dir_path, 'kplib')
     # tạo thư mục chứa output
-    output_dir = os.path.join(os.getcwd(), f'output_{time_limit}')
+    base_output = args.output_dir
+    output_dir = os.path.join(base_output, f'output_{time_limit}')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    kplib_list = os.listdir(dir_path)[1:14] # 0->12
+    kplib_list = sorted(os.listdir(dir_path))[1:14] # 0->12
 
     for i in kplib_list:
         print(i)
         dir_path_0 = os.path.join(dir_path, i)
-        case_list = os.listdir(dir_path_0)# n00050->n10000
+        case_list = sorted(os.listdir(dir_path_0))# n00050->n10000
         # print(case_list)
         for case in case_list:
             case_path = os.path.join(dir_path_0, case)
-            R_list = os.listdir(case_path)
+            R_list = sorted(os.listdir(case_path))
             for r in R_list:
                 kp_filename = 's012'
                 s_path = os.path.join(case_path, r, f'{kp_filename}.kp')            
@@ -93,8 +95,8 @@ def main():
                     f.write('Total weight: '+ str(total_weight)+'\n')
                     f.write('Packed items: '+ str(packed_items)+'\n')
                     f.write('packed_weights: '+str (packed_weights))
-                with open(os.path.join(os.getcwd(), f'output_{time_limit}.txt'), 'a') as file:
-                    file.write(f'{output_file_name.split(sep=".")[0]}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
+                with open(os.path.join(base_output, f'output_{time_limit}.txt'), 'a') as file:
+                    file.write(f'{i}, {case}/{r}/{kp_filename}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
 
 if __name__ == "__main__":
     main()
