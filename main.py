@@ -46,7 +46,8 @@ def knapsack(capacities, values, weights, time_limit):
     print("Packed_weights:", packed_weights)
     
     print("time excution", time_excution)
-    return computed_value, total_weight, packed_items, packed_weights, time_excution
+    print("solution is optimal: ", solver.is_solution_optimal())
+    return computed_value, total_weight, packed_items, packed_weights, time_excution, solver.is_solution_optimal()
 def main():
 
     parser = argparse.ArgumentParser(description='Solve knapsack problem with time limit')
@@ -90,7 +91,7 @@ def main():
         print(test_cases[idx])         
         capacities, values, weights = read_file(test_cases[idx])
 
-        computed_value, total_weight, packed_items, packed_weights, time_excution = knapsack(capacities, values, weights, time_limit)
+        computed_value, total_weight, packed_items, packed_weights, time_excution, is_optimal = knapsack(capacities, values, weights, time_limit)
 
         output_file_name = f'{i_s[idx]}_{cases[idx]}_{rs[idx]}_{kp_filename}.txt'
         output_path = os.path.join(output_dir, output_file_name)
@@ -106,8 +107,9 @@ def main():
             f.write('Total weight: '+ str(total_weight)+'\n')
             f.write('Packed items: '+ str(packed_items)+'\n')
             f.write('packed_weights: '+str (packed_weights))
+            f.write('Is soluton optimal: ' + str(is_optimal))
         with open(os.path.join(base_output, f'output_{time_limit}.txt'), 'a') as file:
-            file.write(f'{idx}, {i_s[idx]}/{cases[idx]}/{rs[idx]}/{kp_filename}, {computed_value}, {total_weight}, {time_excution}, {optimal}\n')
+            file.write(f'{idx}, {i_s[idx]}/{cases[idx]}/{rs[idx]}/{kp_filename}, {computed_value}, {total_weight}, {time_excution}, {optimal}, {is_optimal}\n')
 
 if __name__ == "__main__":
     main()
